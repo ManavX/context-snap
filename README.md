@@ -23,8 +23,8 @@ Save and restore your entire browser state — tabs, scroll positions, form inpu
 
 1. Clone the repo:
    ```
-   git clone https://github.com/ManavX/contextsnap.git
-   cd contextsnap
+   git clone https://github.com/ManavX/context-snap.git
+   cd context-snap
    ```
 
 2. Build:
