@@ -1,7 +1,4 @@
-# ContextSnap
-
-Save and restore your entire browser state — tabs, scroll positions, form inputs, and text selections — in one click.
-
+![Image](https://github.com/ManavX/context-snap/blob/main/assets/icons/marquee-promo-1400x560.png)
 ## Features
 
 - **Full state capture** — tabs, scroll positions, form data, text selections, pinned tabs
