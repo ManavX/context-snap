@@ -1,0 +1,498 @@
+/* ─── Reset & Base ──────────────────────────────────────────────── */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 380px;
+  max-height: 520px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  color: #e2e2e2;
+  background: #1a1a2e;
+  overflow-y: auto;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ─── Header ────────────────────────────────────────────────────── */
+
+.header {
+  padding: 16px 16px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-icon:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Save Section ──────────────────────────────────────────────── */
+
+.save-section {
+  padding: 8px 16px 12px;
+}
+
+.save-row {
+  display: flex;
+  gap: 8px;
+}
+
+.save-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  background: #16162a;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.save-row input:focus {
+  border-color: #6c5ce7;
+}
+
+.save-row input::placeholder {
+  color: #666;
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #555;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────── */
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: #6c5ce7;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #5a4bd1;
+}
+
+.btn-primary:disabled {
+  background: #3a3a5a;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #aaa;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.btn-ghost:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-danger:hover {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.btn-confirm {
+  color: #22c55e !important;
+  background: rgba(34, 197, 94, 0.15) !important;
+}
+
+/* ─── Divider ───────────────────────────────────────────────────── */
+
+.divider {
+  height: 1px;
+  background: #2a2a4a;
+  margin: 0 16px;
+}
+
+/* ─── Context List ──────────────────────────────────────────────── */
+
+.context-list {
+  padding: 8px 0;
+}
+
+.context-item {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.1s;
+  cursor: default;
+}
+
+.context-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.context-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.context-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.context-name-input {
+  background: #16162a;
+  border: 1px solid #6c5ce7;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 6px;
+  width: 100%;
+  outline: none;
+}
+
+.context-meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 3px;
+  font-size: 11px;
+  color: #666;
+}
+
+.context-meta .tabs-count {
+  color: #6c5ce7;
+  font-weight: 500;
+}
+
+.context-details {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.badge-scroll {
+  background: rgba(108, 92, 231, 0.15);
+  color: #a29bfe;
+}
+
+.badge-forms {
+  background: rgba(0, 206, 209, 0.15);
+  color: #00cec9;
+}
+
+.badge-selection {
+  background: rgba(253, 203, 110, 0.15);
+  color: #fdcb6e;
+}
+
+.badge-iframe {
+  background: rgba(116, 185, 255, 0.15);
+  color: #74b9ff;
+}
+
+/* ─── Context Actions ───────────────────────────────────────────── */
+
+.context-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.context-item:hover .context-actions {
+  opacity: 1;
+}
+
+/* ─── Restore Button ────────────────────────────────────────────── */
+
+.btn-restore {
+  background: #6c5ce7;
+  color: #fff;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s;
+}
+
+.context-item:hover .btn-restore {
+  opacity: 1;
+}
+
+.btn-restore:hover {
+  background: #5a4bd1;
+}
+
+/* ─── Empty State ───────────────────────────────────────────────── */
+
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.empty-hint {
+  font-size: 12px;
+  color: #555;
+}
+
+/* ─── Loading ───────────────────────────────────────────────────── */
+
+.loading {
+  padding: 40px;
+  text-align: center;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #333;
+  border-top-color: #6c5ce7;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Toast Notification ────────────────────────────────────────── */
+
+.toast {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: #22c55e;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast.error {
+  background: #ff6b6b;
+}
+
+/* ─── Settings Panel ───────────────────────────────────────────── */
+
+.settings-panel {
+  padding: 0 16px 16px;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0 12px;
+}
+
+.settings-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.settings-group {
+  margin-bottom: 16px;
+}
+
+.settings-group-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6c5ce7;
+  margin-bottom: 8px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.setting-label {
+  font-size: 13px;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.setting-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #888;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: help;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.setting-help:hover {
+  background: rgba(108, 92, 231, 0.3);
+  color: #a29bfe;
+}
+
+/* Toggle switch */
+.toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 36px;
+  height: 20px;
+  background: #2a2a4a;
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #666;
+  top: 2px;
+  left: 2px;
+  transition: all 0.2s;
+}
+
+.toggle:checked {
+  background: #6c5ce7;
+}
+
+.toggle:checked::after {
+  background: #fff;
+  left: 18px;
+}
+
+/* Number input */
+.setting-input-num {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #2a2a4a;
+  border-radius: 6px;
+  background: #16162a;
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+
+.setting-input-num:focus {
+  border-color: #6c5ce7;
+}
+
+.setting-input-num::-webkit-inner-spin-button,
+.setting-input-num::-webkit-outer-spin-button {
+  opacity: 1;
+}
