@@ -1,6 +1,7 @@
 dist/
 node_modules/
 screenshots/
+scripts/generate-icons.js
 *.zip
 .DS_Store
 Thumbs.db
