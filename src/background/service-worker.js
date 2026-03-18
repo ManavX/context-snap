@@ -176,10 +176,13 @@ async function restoreContext(contextId, closeCurrent) {
   }
 
   // Clean up the blank tab (from new window creation or closeCurrent)
+  const isBlankTab = (url) =>
+    url === 'chrome://newtab/' || url === 'about:newtab' || url === 'about:home' || url === 'about:blank';
+
   if (useNewWindow && targetWindowId) {
     const windowTabs = await chrome.tabs.query({ windowId: targetWindowId });
     const blankTab = windowTabs.find(
-      (t) => t.url === 'chrome://newtab/' && !openedTabs.some((o) => o.tab.id === t.id)
+      (t) => isBlankTab(t.url) && !openedTabs.some((o) => o.tab.id === t.id)
     );
     if (blankTab && windowTabs.length > 1) {
       await chrome.tabs.remove(blankTab.id);
@@ -187,7 +190,7 @@ async function restoreContext(contextId, closeCurrent) {
   } else if (closeCurrent) {
     const allTabs = await chrome.tabs.query({ currentWindow: true });
     const blankTab = allTabs.find(
-      (t) => t.url === 'chrome://newtab/' && !openedTabs.some((o) => o.tab.id === t.id)
+      (t) => isBlankTab(t.url) && !openedTabs.some((o) => o.tab.id === t.id)
     );
     if (blankTab && allTabs.length > 1) {
       await chrome.tabs.remove(blankTab.id);

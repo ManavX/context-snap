@@ -12,7 +12,7 @@
     try { window.__contextSnapshotsCleanup(); } catch (e) { /* already dead */ }
   }
 
-  const DEBUG = false; // Set to true to see console logs
+  const DEBUG = true; // Set to true to see console logs
 
   function log(...args) {
     if (DEBUG) console.log('[ContextSnapshots]', ...args);
@@ -419,12 +419,17 @@
       if (state.formData && Object.keys(state.formData).length > 0) {
         restoreFormData(state.formData);
         // Single retry for dynamic content (React hydration, lazy forms)
-        setTimeout(() => restoreFormData(state.formData), 1500);
-      }
-
-      // Restore text selection (after form restore settles)
-      if (state.selectionContext) {
-        setTimeout(() => restoreSelection(state.selectionContext), 2000);
+        setTimeout(() => {
+          restoreFormData(state.formData);
+          // Restore text selection AFTER the retry pass — el.focus() in
+          // applyValue steals focus and collapses any existing selection
+          if (state.selectionContext) {
+            setTimeout(() => restoreSelection(state.selectionContext), 500);
+          }
+        }, 1500);
+      } else if (state.selectionContext) {
+        // No form data — restore selection directly
+        setTimeout(() => restoreSelection(state.selectionContext), 500);
       }
     });
   }
@@ -459,14 +464,14 @@
     }
 
     // Progressive scroll for infinite-scroll pages:
-    // Scroll down in steps to trigger lazy loading until we reach the target
+    // Scroll down in large steps to trigger lazy loading until we reach the target
     log('Progressive scroll needed — target:', y, 'current page height:', document.documentElement.scrollHeight);
 
     let attempts = 0;
     let staleCount = 0; // Consecutive steps with no page growth
-    const maxAttempts = 50; // Safety cap
-    const maxStale = 3; // Give up after 3 consecutive no-growth steps
-    const stepSize = Math.max(800, Math.floor(window.innerHeight * 0.8));
+    const maxAttempts = 60; // Safety cap
+    const maxStale = 5; // Give up after 5 consecutive no-growth steps (tolerates slow connections)
+    const stepSize = Math.max(2000, window.innerHeight * 2); // Large steps for speed
 
     function done() {
       // Small delay after final scroll for DOM to settle
@@ -485,7 +490,7 @@
         return;
       }
 
-      // Scroll down one step
+      // Scroll down by a large step
       const prevScroll = window.scrollY;
       window.scrollBy(0, stepSize);
 
@@ -506,16 +511,16 @@
             done();
             return;
           }
-          // Wait longer before retrying — give lazy content time to load
+          // Wait longer — content is still loading over the network
           log('Progressive scroll stale attempt', staleCount, '— waiting longer...');
-          setTimeout(scrollStep, 1000);
+          setTimeout(scrollStep, 1500);
           return;
         }
 
-        // Page grew — reset stale counter
+        // Page grew — reset stale counter and continue quickly
         staleCount = 0;
-        scrollStep();
-      }, 500); // Wait for lazy content to load between steps
+        setTimeout(scrollStep, 300);
+      }, 400); // Short wait between steps when content is loading
     }
 
     scrollStep();
@@ -674,6 +679,9 @@
     // Don't override if user already selected something
     const currentSel = window.getSelection();
     if (currentSel && !currentSel.isCollapsed) return;
+
+    // Remove focus from any input — focused inputs steal selection
+    try { document.activeElement?.blur(); } catch (e) { /* skip */ }
 
     // Find search scope — try anchor first, then broaden to body
     let searchRoot = document.body;

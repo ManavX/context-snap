@@ -78,7 +78,17 @@ function buildFirefox() {
     gecko: {
       id: 'contextsnap@example.com',
       strict_min_version: '109.0',
+      data_collection_permissions: {
+        required: ["none"],
+        optional: [],
+      },
     },
+  };
+
+  // Firefox doesn't support service_worker — use background.scripts instead
+  manifest.background = {
+    scripts: [manifest.background.service_worker],
+    type: 'module',
   };
 
   // Firefox: replace show-contexts with _execute_action

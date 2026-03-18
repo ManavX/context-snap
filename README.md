@@ -87,3 +87,7 @@ contextsnap/
 ## Privacy
 
 All data is stored locally on your device. Nothing is sent to any server. See [PRIVACY-POLICY.md](PRIVACY-POLICY.md) for details.
+
+## License
+
+[GNU GPLv3](LICENSE)
