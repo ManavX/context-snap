@@ -1,5 +1,6 @@
 dist/
 node_modules/
+screenshots/
 *.zip
 .DS_Store
 Thumbs.db
