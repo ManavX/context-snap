@@ -11,10 +11,10 @@
 ## Install
 
 ### Chrome Web Store
-*(Coming soon)*
+[Chrome](https://chromewebstore.google.com/detail/contextsnap/hdgnghakdpijiahejbplhnfhgoocckji)
 
 ### Firefox Add-ons
-*(Coming soon)*
+[Firefox](https://addons.mozilla.org/en-CA/firefox/addon/contextsnap/)
 
 ### From source
 
