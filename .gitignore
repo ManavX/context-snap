@@ -5,3 +5,4 @@ scripts/generate-icons.js
 *.zip
 .DS_Store
 Thumbs.db
+assets/icons/concepts/
