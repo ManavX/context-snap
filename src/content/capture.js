@@ -52,8 +52,31 @@
   // Register the listener and store a cleanup function so re-injection
   // can remove the stale listener and register a fresh one.
   chrome.runtime.onMessage.addListener(messageHandler);
+
+  // ─── Auto-Save: Cache state on beforeunload ───────────────────────
+
+  function beforeUnloadHandler() {
+    try {
+      const state = capturePageState();
+      chrome.runtime.sendMessage({
+        type: 'TAB_STATE_CACHE',
+        scrollX: state.scrollX,
+        scrollY: state.scrollY,
+        scrollHeight: state.scrollHeight,
+        formData: state.formData,
+        selectedText: state.selectedText,
+        selectionContext: state.selectionContext,
+      });
+    } catch (e) {
+      // Extension context may be invalidated — silently ignore
+    }
+  }
+
+  window.addEventListener('beforeunload', beforeUnloadHandler);
+
   window.__contextSnapshotsCleanup = () => {
     chrome.runtime.onMessage.removeListener(messageHandler);
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
   };
 
   log('Content script loaded (fresh listener registered)');

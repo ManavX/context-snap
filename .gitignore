@@ -6,3 +6,5 @@ scripts/generate-icons.js
 .DS_Store
 Thumbs.db
 assets/icons/concepts/
+.claude/
+CLAUDE.md

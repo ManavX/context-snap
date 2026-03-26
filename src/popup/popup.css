@@ -261,6 +261,27 @@ body {
   color: #74b9ff;
 }
 
+/* ─── Pinned Context ───────────────────────────────────────────── */
+
+.context-item.pinned {
+  border-left: 2px solid #f1c40f;
+  padding-left: 14px;
+}
+
+.btn-pin {
+  font-size: 14px !important;
+}
+
+.btn-pin:hover {
+  color: #f1c40f !important;
+  background: rgba(241, 196, 15, 0.1) !important;
+}
+
+.btn-pin.active {
+  color: #f1c40f;
+  opacity: 1 !important;
+}
+
 /* ─── Context Actions ───────────────────────────────────────────── */
 
 .context-actions {
@@ -270,7 +291,8 @@ body {
   transition: opacity 0.15s;
 }
 
-.context-item:hover .context-actions {
+.context-item:hover .context-actions,
+.context-item .context-actions:has(.btn-pin.active) {
   opacity: 1;
 }
 

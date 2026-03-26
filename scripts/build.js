@@ -26,6 +26,7 @@ const FILES = [
   'src/popup/popup.css',
   'src/popup/popup.js',
   'src/shared/types.js',
+  'src/changelog/changelog.html',
   'assets/icons/icon16.png',
   'assets/icons/icon48.png',
   'assets/icons/icon128.png',

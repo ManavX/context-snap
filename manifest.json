@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ContextSnap",
-  "version": "1.0.0",
+  "version": "1.0.21",
   "description": "Save and restore your entire browser state — tabs, scroll positions, form inputs, and text selections — in one click.",
   "permissions": [
     "tabs",
@@ -40,6 +40,13 @@
       "description": "Open context list"
     }
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/capture.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "icons": {
     "16": "assets/icons/icon16.png",
     "48": "assets/icons/icon48.png",

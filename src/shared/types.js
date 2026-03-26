@@ -18,6 +18,7 @@
  * @property {TabState[]} tabs - Array of tab states
  * @property {number} createdAt - Timestamp
  * @property {number} tabCount - Number of tabs
+ * @property {boolean} pinned - Whether this context is protected from auto-deletion
  */
 
 // Message types for communication between components
@@ -30,8 +31,10 @@ export const MSG = {
   DELETE_CONTEXT: 'DELETE_CONTEXT',
   GET_CONTEXTS: 'GET_CONTEXTS',
   RENAME_CONTEXT: 'RENAME_CONTEXT',
+  PIN_CONTEXT: 'PIN_CONTEXT',
   GET_SETTINGS: 'GET_SETTINGS',
   SAVE_SETTINGS: 'SAVE_SETTINGS',
+  TAB_STATE_CACHE: 'TAB_STATE_CACHE',
 };
 
 export const DEFAULT_SETTINGS = {
@@ -42,5 +45,6 @@ export const DEFAULT_SETTINGS = {
   openInNewWindow: true,
   maxContexts: 20,
   autoDeleteDays: 0, // 0 = off
+  autoSaveOnClose: true,
   showNotifications: true,
 };

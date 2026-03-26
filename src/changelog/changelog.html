@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContextSnap — What's New</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a2e;
+      color: #e2e2e2;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+
+    .container {
+      max-width: 620px;
+      width: 100%;
+    }
+
+    /* ─── Header ───────────────────────────────────────── */
+
+    .header {
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    /* ─── Version Block ────────────────────────────────── */
+
+    .version-block {
+      margin-bottom: 48px;
+    }
+
+    .version-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .version-tag {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .version-date {
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* ─── Feature Card ─────────────────────────────────── */
+
+    .feature {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .feature:hover {
+      border-color: #3a3a5a;
+    }
+
+    .feature-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .badge-new {
+      background: rgba(108, 92, 231, 0.2);
+      color: #a29bfe;
+    }
+
+    .badge-improved {
+      background: rgba(0, 206, 209, 0.15);
+      color: #00cec9;
+    }
+
+    .badge-fix {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    .feature-desc strong {
+      color: #ccc;
+      font-weight: 600;
+    }
+
+    .feature-details {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #2a2a4a;
+    }
+
+    .feature-details ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feature-details li {
+      font-size: 12px;
+      color: #888;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .feature-details li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #6c5ce7;
+    }
+
+    /* ─── Shortcut Key ─────────────────────────────────── */
+
+    kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-family: inherit;
+      background: #16162a;
+      border: 1px solid #2a2a4a;
+      border-radius: 4px;
+      color: #ccc;
+    }
+
+    /* ─── Footer ───────────────────────────────────────── */
+
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #2a2a4a;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .footer a {
+      color: #6c5ce7;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── Star demo ────────────────────────────────────── */
+
+    .star-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(241, 196, 15, 0.1);
+      border-left: 2px solid #f1c40f;
+      padding: 3px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 13px;
+      color: #f1c40f;
+      margin-top: 6px;
+    }
+
+    /* ─── Scrollbar ────────────────────────────────────── */
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="logo">ContextSnap</h1>
+      <p class="subtitle">What's new in the latest update</p>
+    </div>
+
+    <div class="version-block">
+      <div class="version-header">
+        <span class="version-tag">v1.0.21</span>
+        <span class="version-date">March 2026</span>
+      </div>
+
+      <!-- Auto-Save -->
+      <div class="feature">
+        <span class="feature-badge badge-new">New Feature</span>
+        <h3 class="feature-title">Auto-Save on Window Close</h3>
+        <p class="feature-desc">
+          Your browser context is now <strong>automatically saved</strong> when you close a window.
+          Scroll positions, form data, and text selections are all captured — so nothing is lost
+          even if you close a window by accident.
+        </p>
+        <div class="feature-details">
+          <ul>
+            <li>Full state capture including scroll, forms, and selections</li>
+            <li>Enabled by default — toggle it off in Settings under Storage</li>
+            <li>Skips empty windows (new tabs only)</li>
+            <li>Saved as "Auto Save" with a timestamp for easy identification</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Pin/Star -->
+      <div class="feature">
+        <span class="feature-badge badge-new">New Feature</span>
+        <h3 class="feature-title">Pin Important Contexts</h3>
+        <p class="feature-desc">
+          Click the <strong>star</strong> on any saved context to pin it.
+          Pinned contexts are <strong>protected</strong> from auto-delete and max context limits — they'll
+          never be automatically removed.
+        </p>
+        <div class="feature-details">
+          <ul>
+            <li>
+              <span class="star-demo">&#9733; Pinned</span>
+            </li>
+            <li>Protected from "Auto-delete after X days"</li>
+            <li>Protected from "Max saved contexts" limit</li>
+            <li>Click the star again to unpin</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bug fix -->
+      <div class="feature">
+        <span class="feature-badge badge-fix">Bug Fix</span>
+        <h3 class="feature-title">Quick Save Now Respects Limits</h3>
+        <p class="feature-desc">
+          Quick saves (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>) now correctly enforce
+          the max contexts and auto-delete settings. Previously, quick saves could exceed these limits.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Thanks for using ContextSnap!</p>
+    </div>
+  </div>
+</body>
+</html>

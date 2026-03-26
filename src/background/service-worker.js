@@ -5,6 +5,16 @@
 
 import { MSG, DEFAULT_SETTINGS } from '../shared/types.js';
 
+// ─── Install / Update ───────────────────────────────────────────────
+
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install' || details.reason === 'update') {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL('src/changelog/changelog.html'),
+    });
+  }
+});
+
 // ─── Script Injection ───────────────────────────────────────────────
 
 /**
@@ -48,6 +58,36 @@ async function getSettings() {
 
 async function saveSettings(settings) {
   await chrome.storage.local.set({ settings });
+}
+
+/**
+ * Enforces maxContexts and autoDeleteDays limits, skipping pinned contexts.
+ */
+function enforceContextLimits(contexts, settings) {
+  // Enforce max contexts limit (skip pinned)
+  if (settings.maxContexts > 0 && contexts.length > settings.maxContexts) {
+    const result = [];
+    let unpinnedCount = 0;
+    const pinnedTotal = contexts.filter((c) => c.pinned).length;
+    const maxUnpinned = Math.max(0, settings.maxContexts - pinnedTotal);
+    for (const c of contexts) {
+      if (c.pinned) {
+        result.push(c);
+      } else if (unpinnedCount < maxUnpinned) {
+        result.push(c);
+        unpinnedCount++;
+      }
+    }
+    contexts = result;
+  }
+
+  // Auto-delete old contexts (skip pinned)
+  if (settings.autoDeleteDays > 0) {
+    const cutoff = Date.now() - settings.autoDeleteDays * 86400000;
+    contexts = contexts.filter((c) => c.pinned || c.createdAt > cutoff);
+  }
+
+  return contexts;
 }
 
 // ─── Tab State Capture ──────────────────────────────────────────────
@@ -265,7 +305,33 @@ function restoreTabAfterLoad(tabId, tabState, settings) {
 
 // ─── Message Handler ────────────────────────────────────────────────
 
+// ─── Auto-Save Tab State Cache ──────────────────────────────────────
+
+// Maps tabId → { windowId, state } for auto-save on window close
+const tabStateCache = new Map();
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === MSG.TAB_STATE_CACHE && sender.tab) {
+    tabStateCache.set(sender.tab.id, {
+      windowId: sender.tab.windowId,
+      state: {
+        url: sender.tab.url,
+        title: sender.tab.title || '',
+        pinned: sender.tab.pinned || false,
+        active: sender.tab.active || false,
+        faviconUrl: sender.tab.favIconUrl || null,
+        scrollX: message.scrollX || 0,
+        scrollY: message.scrollY || 0,
+        scrollHeight: message.scrollHeight || 0,
+        formData: message.formData || {},
+        selectedText: message.selectedText || '',
+        selectionContext: message.selectionContext || null,
+      },
+    });
+    sendResponse({ success: true });
+    return;
+  }
+
   handleMessage(message).then(sendResponse);
   return true; // Keep the message channel open for async response
 });
@@ -277,18 +343,7 @@ async function handleMessage(message) {
       const context = await captureFullContext(message.name);
       let contexts = await getContexts();
       contexts.unshift(context); // Newest first
-
-      // Enforce max contexts limit
-      if (settings.maxContexts > 0 && contexts.length > settings.maxContexts) {
-        contexts = contexts.slice(0, settings.maxContexts);
-      }
-
-      // Auto-delete old contexts
-      if (settings.autoDeleteDays > 0) {
-        const cutoff = Date.now() - settings.autoDeleteDays * 86400000;
-        contexts = contexts.filter((c) => c.createdAt > cutoff);
-      }
-
+      contexts = enforceContextLimits(contexts, settings);
       await saveContexts(contexts);
       return { success: true, context };
     }
@@ -307,6 +362,17 @@ async function handleMessage(message) {
     case MSG.GET_CONTEXTS: {
       const contexts = await getContexts();
       return { contexts };
+    }
+
+    case MSG.PIN_CONTEXT: {
+      const contexts = await getContexts();
+      const ctx = contexts.find((c) => c.id === message.contextId);
+      if (ctx) {
+        ctx.pinned = !ctx.pinned;
+        await saveContexts(contexts);
+        return { success: true, pinned: ctx.pinned };
+      }
+      return { success: false, error: 'Context not found' };
     }
 
     case MSG.RENAME_CONTEXT: {
@@ -339,11 +405,13 @@ async function handleMessage(message) {
 
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'save-context') {
+    const settings = await getSettings();
     const context = await captureFullContext(
       `Quick Save — ${new Date().toLocaleString()}`
     );
-    const contexts = await getContexts();
+    let contexts = await getContexts();
     contexts.unshift(context);
+    contexts = enforceContextLimits(contexts, settings);
     await saveContexts(contexts);
 
     // Show a badge briefly to confirm save
@@ -357,4 +425,46 @@ chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'show-contexts') {
     chrome.action.openPopup();
   }
+});
+
+// ─── Auto-Save on Window Close ──────────────────────────────────────
+
+// Clean up cache when a tab is closed individually (not during window close)
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  if (!removeInfo.isWindowClosing) {
+    tabStateCache.delete(tabId);
+  }
+});
+
+chrome.windows.onRemoved.addListener(async (windowId) => {
+  const settings = await getSettings();
+  if (!settings.autoSaveOnClose) return;
+
+  // Collect cached states for tabs that belonged to this window
+  const tabStates = [];
+  for (const [tabId, entry] of tabStateCache) {
+    if (entry.windowId === windowId) {
+      tabStates.push(entry.state);
+      tabStateCache.delete(tabId);
+    }
+  }
+
+  // Skip empty windows or windows with only blank tabs
+  const isBlankUrl = (url) =>
+    !url || url === 'chrome://newtab/' || url === 'about:newtab' || url === 'about:home' || url === 'about:blank';
+  const realTabs = tabStates.filter((t) => !isBlankUrl(t.url));
+  if (realTabs.length === 0) return;
+
+  const context = {
+    id: generateId(),
+    name: `Auto Save — ${new Date().toLocaleString()}`,
+    tabs: tabStates,
+    createdAt: Date.now(),
+    tabCount: tabStates.length,
+  };
+
+  let contexts = await getContexts();
+  contexts.unshift(context);
+  contexts = enforceContextLimits(contexts, settings);
+  await saveContexts(contexts);
 });

@@ -104,7 +104,7 @@ function renderContexts() {
 
 function createContextElement(ctx) {
   const item = document.createElement('div');
-  item.className = 'context-item';
+  item.className = `context-item${ctx.pinned ? ' pinned' : ''}`;
 
   // Count special states
   const hasWindowScroll = ctx.tabs.some((t) => t.scrollY > 0 || t.scrollX > 0);
@@ -140,6 +140,9 @@ function createContextElement(ctx) {
     </div>
     <button class="btn-restore" data-id="${ctx.id}" title="Restore this context">Restore</button>
     <div class="context-actions">
+      <button class="btn btn-ghost btn-pin${ctx.pinned ? ' active' : ''}" data-action="pin" data-id="${ctx.id}" title="${ctx.pinned ? 'Unpin' : 'Pin'}">
+        ${ctx.pinned ? '&#9733;' : '&#9734;'}
+      </button>
       <button class="btn btn-ghost" data-action="rename" data-id="${ctx.id}" title="Rename">
         &#9998;
       </button>
@@ -152,6 +155,12 @@ function createContextElement(ctx) {
   // Event listeners
   const restoreBtn = item.querySelector('.btn-restore');
   restoreBtn.addEventListener('click', () => handleRestore(ctx.id));
+
+  const pinBtn = item.querySelector('[data-action="pin"]');
+  pinBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handlePin(ctx.id);
+  });
 
   const renameBtn = item.querySelector('[data-action="rename"]');
   renameBtn.addEventListener('click', (e) => {
@@ -191,6 +200,16 @@ async function handleRestore(contextId) {
   } catch (e) {
     showToast('Failed to restore context', true);
   }
+}
+
+// ─── Pin Context ────────────────────────────────────────────────
+
+async function handlePin(contextId) {
+  await chrome.runtime.sendMessage({
+    type: MSG.PIN_CONTEXT,
+    contextId,
+  });
+  await loadContexts();
 }
 
 // ─── Rename Context ─────────────────────────────────────────────
@@ -306,6 +325,7 @@ function openSettings() {
   document.getElementById('set-openInNewWindow').checked = settings.openInNewWindow;
   document.getElementById('set-maxContexts').value = settings.maxContexts;
   document.getElementById('set-autoDeleteDays').value = settings.autoDeleteDays;
+  document.getElementById('set-autoSaveOnClose').checked = settings.autoSaveOnClose;
   document.getElementById('set-showNotifications').checked = settings.showNotifications;
 
   // Show settings
@@ -335,6 +355,7 @@ async function saveCurrentSettings() {
   settings.openInNewWindow = document.getElementById('set-openInNewWindow').checked;
   settings.maxContexts = parseInt(document.getElementById('set-maxContexts').value, 10) || 0;
   settings.autoDeleteDays = parseInt(document.getElementById('set-autoDeleteDays').value, 10) || 0;
+  settings.autoSaveOnClose = document.getElementById('set-autoSaveOnClose').checked;
   settings.showNotifications = document.getElementById('set-showNotifications').checked;
 
   await chrome.runtime.sendMessage({ type: MSG.SAVE_SETTINGS, settings });

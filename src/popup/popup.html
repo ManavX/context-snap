@@ -118,7 +118,7 @@
         <label class="setting-row">
           <div class="setting-label">
             Max saved contexts
-            <span class="setting-help" title="Oldest contexts are automatically removed when this limit is reached. Set to 0 for unlimited.">?</span>
+            <span class="setting-help" title="Oldest unpinned contexts are automatically removed when this limit is reached. Set to 0 for unlimited. Pinned contexts are never removed.">?</span>
           </div>
           <input type="number" id="set-maxContexts" class="setting-input-num" min="0" max="100" step="1">
         </label>
@@ -126,9 +126,17 @@
         <label class="setting-row">
           <div class="setting-label">
             Auto-delete after (days)
-            <span class="setting-help" title="Contexts older than this many days are removed on next save. Set to 0 to disable.">?</span>
+            <span class="setting-help" title="Contexts older than this many days are removed on next save. Set to 0 to disable. Pinned contexts are never auto-deleted.">?</span>
           </div>
           <input type="number" id="set-autoDeleteDays" class="setting-input-num" min="0" max="365" step="1">
+        </label>
+
+        <label class="setting-row">
+          <div class="setting-label">
+            Auto-save on window close
+            <span class="setting-help" title="Automatically saves the context of a window when it's closed, including scroll positions, form data, and text selections.">?</span>
+          </div>
+          <input type="checkbox" id="set-autoSaveOnClose" class="toggle">
         </label>
       </div>
 
