@@ -69,6 +69,7 @@ contextsnap/
 | Open in new window | On | Restores tabs in a new window instead of replacing current tabs |
 | Max saved contexts | 20 | Oldest removed when limit reached (0 = unlimited) |
 | Auto-delete after X days | Off | Removes contexts older than X days |
+| Auto-save on window close | On |  Automatically save browser context when you close a window |
 | Show notifications | On | Toast messages on save/restore |
 
 ## Permissions
